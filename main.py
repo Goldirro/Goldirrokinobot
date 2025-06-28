@@ -1,8 +1,9 @@
+import os
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-# Bot tokenini shu yerga yozamiz
-TOKEN = '7567682977:AAEM2cmYxVtVgqD14Kcmuwp8NhCwdWxKYCo'
+# Tokenni ENV (muhit o'zgaruvchisi) dan olamiz
+TOKEN = os.getenv('TOKEN')
 bot = telebot.TeleBot(TOKEN)
 
 # Kanalga obuna bo‘lganini tekshirish
@@ -30,15 +31,13 @@ def start_handler(message):
     btn3 = InlineKeyboardButton("✅ A'zo bo‘ldim", callback_data="check_subs")
     markup.add(btn1, btn2, btn3)
 
-    # Xabar matni
     text = (
         "Assalom alaykum Goldirrokino ga xush kelibsiz! 🎬\n\n"
         "Botdan foydalanish uchun quyidagi kanallarga a’zo bo‘ling:"
     )
-
     bot.send_message(chat_id, text, reply_markup=markup)
 
-# "A'zo bo‘ldim" tugmasi bosilganda
+# "A'zo bo‘ldim" tugmasi
 @bot.callback_query_handler(func=lambda call: call.data == "check_subs")
 def check_subscriptions(call):
     user_id = call.from_user.id
@@ -52,6 +51,7 @@ def check_subscriptions(call):
             "❌ Iltimos, ikkala kanalga ham a'zo bo‘ling:\n@goldirro va @goldirrokino"
         )
 
-# Botni ishga tushirish
-print("🤖 Bot ishga tushdi...")
-bot.polling(none_stop=True)
+# Botni ishga tushiramiz
+if __name__ == "__main__":
+    print("🤖 Bot ishga tushdi...")
+    bot.polling(none_stop=True)
