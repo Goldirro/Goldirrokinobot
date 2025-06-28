@@ -3,6 +3,6 @@ services:
     name: goldirrokinobot
     env: python
     plan: free
-    runtime: python3.10
+    runtime: python3.10  # YOKI 3.11 — 3.13 EMAS!
     buildCommand: pip install -r requirements.txt
     startCommand: python main.py
