@@ -2,9 +2,9 @@ services:
   - type: web
     name: goldirrokinobot
     env: python
+    buildCommand: ""
+    startCommand: "python main.py"
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: python main.py
     envVars:
       - key: BOT_TOKEN
-        value: 7567682977:AAEM2cmYxVtVgqD14Kcmuwp8NhCwdWxKYCo
+        sync: false
