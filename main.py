@@ -1,12 +1,11 @@
-import os
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+import os
 
-# Tokenni ENV (muhit o'zgaruvchisi) dan olamiz
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv("BOT_TOKEN")  # TOKEN .env dan olinadi
 bot = telebot.TeleBot(TOKEN)
 
-# Kanalga obuna bo‘lganini tekshirish
+# Obuna tekshiruvi
 def check_subscription(user_id):
     channels = ['@goldirro', '@goldirrokino']
     for channel in channels:
@@ -23,25 +22,22 @@ def check_subscription(user_id):
 @bot.message_handler(commands=['start'])
 def start_handler(message):
     chat_id = message.chat.id
-
-    # Tugmalar
     markup = InlineKeyboardMarkup(row_width=1)
-    btn1 = InlineKeyboardButton("1️⃣ @goldirro", url="https://t.me/goldirro")
-    btn2 = InlineKeyboardButton("2️⃣ @goldirrokino", url="https://t.me/goldirrokino")
-    btn3 = InlineKeyboardButton("✅ A'zo bo‘ldim", callback_data="check_subs")
-    markup.add(btn1, btn2, btn3)
-
-    text = (
-        "Assalom alaykum Goldirrokino ga xush kelibsiz! 🎬\n\n"
-        "Botdan foydalanish uchun quyidagi kanallarga a’zo bo‘ling:"
+    markup.add(
+        InlineKeyboardButton("1️⃣ @goldirro", url="https://t.me/goldirro"),
+        InlineKeyboardButton("2️⃣ @goldirrokino", url="https://t.me/goldirrokino"),
+        InlineKeyboardButton("✅ A'zo bo‘ldim", callback_data="check_subs")
     )
-    bot.send_message(chat_id, text, reply_markup=markup)
+    bot.send_message(chat_id,
+        "Assalom alaykum Goldirrokino ga xush kelibsiz! 🎬\n\n"
+        "Botdan foydalanish uchun quyidagi kanallarga a’zo bo‘ling:",
+        reply_markup=markup
+    )
 
-# "A'zo bo‘ldim" tugmasi
+# Obuna tekshiruvi
 @bot.callback_query_handler(func=lambda call: call.data == "check_subs")
-def check_subscriptions(call):
-    user_id = call.from_user.id
-    if check_subscription(user_id):
+def check_subs_handler(call):
+    if check_subscription(call.from_user.id):
         bot.send_message(call.message.chat.id,
             "✅ Raxmat! Endi kinolarni nomi yoki kodi orqali izlang:\n\n"
             "🎬 Masalan: flash yoki #201"
@@ -51,7 +47,6 @@ def check_subscriptions(call):
             "❌ Iltimos, ikkala kanalga ham a'zo bo‘ling:\n@goldirro va @goldirrokino"
         )
 
-# Botni ishga tushiramiz
-if __name__ == "__main__":
-    print("🤖 Bot ishga tushdi...")
-    bot.polling(none_stop=True)
+# Botni ishga tushirish
+print("🤖 Bot ishga tushdi...")
+bot.polling(none_stop=True)
